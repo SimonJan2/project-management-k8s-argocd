@@ -12,7 +12,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-     
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
      
@@ -35,7 +37,7 @@ jobs:
 
       - name: Update kubernetes manifests
         run: |
-          # Update deployment timestamp to force a rollout
+          git pull origin main  # Pull latest changes first
           timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           sed -i "s|kubectl.kubernetes.io/restartedAt: '.*'|kubectl.kubernetes.io/restartedAt: '$timestamp'|" k8s/backend.yaml
           
@@ -45,13 +47,17 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           git add k8s/backend.yaml
           git commit -m "Update backend deployment timestamp for new image" || echo "No changes to commit"
+          git pull --rebase origin main  # Rebase if needed
           git push origin main
 
   build-client:
+    needs: [build-server]  # Make this job run after server job completes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -75,7 +81,7 @@ jobs:
 
       - name: Update kubernetes manifests
         run: |
-          # Update deployment timestamp to force a rollout
+          git pull origin main  # Pull latest changes first
           timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           sed -i "s|kubectl.kubernetes.io/restartedAt: '.*'|kubectl.kubernetes.io/restartedAt: '$timestamp'|" k8s/frontend.yaml
           
@@ -85,5 +91,5 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           git add k8s/frontend.yaml
           git commit -m "Update frontend deployment timestamp for new image" || echo "No changes to commit"
+          git pull --rebase origin main  # Rebase if needed
           git push origin main
-          
