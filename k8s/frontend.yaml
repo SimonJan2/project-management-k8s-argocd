@@ -9,6 +9,8 @@ spec:
       app: frontend
   template:
     metadata:
+      annotations:
+          kubectl.kubernetes.io/restartedAt: ''
       labels:
         app: frontend
     spec:
