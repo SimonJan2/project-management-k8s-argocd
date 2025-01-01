@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      serviceAccountName: frontend-sa
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      - name: init-script
+        configMap:
+          name: init-script
+          defaultMode: 0777
+      initContainers:
+      - name: wait-for-backend
+        image: bitnami/kubectl
+        command: ["/bin/sh"]
+        args: ["/scripts/get-backend-url.sh"]
+        volumeMounts:
+        - name: shared-data
+          mountPath: /shared
+        - name: init-script
+          mountPath: /scripts
+      containers:
+      - name: frontend
+        image: simonjan2/project-management:client
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: shared-data
+          mountPath: /shared
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          if [ -f /shared/backend-url ]; then
+            export REACT_APP_CLIENT_GRAPHQL=$(cat /shared/backend-url)
+            export HOST=0.0.0.0
+            export PORT=3000
+            export WDS_SOCKET_PORT=0
+          fi
+          npm start
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer

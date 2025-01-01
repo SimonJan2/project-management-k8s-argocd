@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-script
+data:
+  get-backend-url.sh: |
+    #!/bin/sh
+    while true; do
+      BACKEND_IP=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+      if [ ! -z "$BACKEND_IP" ]; then
+        echo "http://$BACKEND_IP:5000/graphql" > /shared/backend-url
+        break
+      fi
+      echo "Waiting for backend service LoadBalancer IP..."
+      sleep 5
+    done

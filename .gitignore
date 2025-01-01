@@ -1,0 +1,7 @@
+# create .gitignore file
+
+# ignore node_modules
+node_modules/
+
+# ignore data
+data/
