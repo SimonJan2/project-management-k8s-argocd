@@ -7,7 +7,7 @@ export default function Header() {
         <a className='navbar-brand' href='/'>
           <div className='d-flex'>
             <img src={logo} alt='logo' className='mr-2' />
-            <div>Project Management 5</div>
+            <div>Project Management Prod</div>
           </div>
         </a>
       </div>
