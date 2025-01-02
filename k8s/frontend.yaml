@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       annotations:
-          kubectl.kubernetes.io/restartedAt: '2025-01-01T20:33:47Z'
+          kubectl.kubernetes.io/restartedAt: '2025-01-01T20:36:18Z'
       labels:
         app: frontend
     spec:
