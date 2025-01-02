@@ -1,19 +1,8 @@
-# Project Management (A Dockerize MERN App)
+# Project Management System (MERN Stack with K8s & ArgoCD)
 
-[![Docker CI](https://github.com/mdarif/project-management/actions/workflows/docker.yml/badge.svg?branch=master)](https://github.com/mdarif/project-management/actions/workflows/docker.yml) [![Node.js CI](https://github.com/mdarif/project-management/actions/workflows/node.js.yml/badge.svg)](https://github.com/mdarif/project-management/actions/workflows/node.js.yml)
+A comprehensive project management system built using the MERN stack (MongoDB, Express.js, React, Node.js), containerized with Docker, and deployed using Kubernetes and ArgoCD for continuous deployment.
 
-
-
-<p>
-  <a href="https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  </a>
-  <a href="https://twitter.com/arif_iq" target="_blank">
-    <img alt="Twitter: arif_iq" src="https://img.shields.io/twitter/follow/arif_iq.svg?style=social" />
-  </a>
-</p>
-
-> A Dockerize MERN app using Github Actions about Project Management System to add/manage clients & Projects using GraphGL Server/Client.
+[![Docker CI](https://github.com/mdarif/project-management/actions/workflows/docker.yml/badge.svg?branch=master)](https://github.com/mdarif/project-management/actions/workflows/docker.yml)
 
 # Architecture
 A Full Stack Dockerize MERN app with GraphQL Server/Client.
@@ -28,182 +17,184 @@ A Full Stack Dockerize MERN app with GraphQL Server/Client.
 
 ![GraphQL API](./client/src/images/graph-ql.png)
 
-## What is a container?
-> A container is the standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.
+## 🌟 Features
 
-## Docker Container
-A Docker container image is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries and settings. Container images become containers at runtime and in the case of Docker containers — images become containers when they run on Docker Engine.
+- Full-stack MERN application
+- GraphQL API implementation
+- Docker containerization
+- Kubernetes orchestration
+- ArgoCD for GitOps continuous deployment
+- Client & Project management functionality
+- Modern React frontend with responsive design
 
-## Docker Hub
-Docker Hub is a cloud-based repository service provided by Docker in which users create, test, store and distribute container images. Through Docker Hub, a user can access public, open-source image repositories, as well as use space to create their own private repositories, automated build functions, webhooks and workgroups.
+## 🏗 Architecture
 
-## Overview
-We are going to Dockerize Node.JS, React, and MongoDB into separate containers. Then we are going to use **DOCKER COMPOSE** to run the multi-container application.
+### Tech Stack
+- **Frontend**: React.js
+- **Backend**: Node.js with Express
+- **Database**: MongoDB
+- **API**: GraphQL
+- **Container Runtime**: Docker
+- **Container Orchestration**: Kubernetes
+- **Continuous Deployment**: ArgoCD
 
-At last, from a single command, we can create and start all the services from our configuration.
-
-### Initializing the Project
-Clone the GitHub link to a local folder in your computer. Open the folder using VSCode or any text editor of your choice.
-
-### Docker Files
-Now, we need to create a Dockerfile for the server and the client. The **Dockerfile **essentially contains the build instructions to build the image.
-
-Let’s start by creating the Dockerfile for the client (our React Frontend).
-
-In the client folder, create a file called **Dockerfile **without any extension.
-
-Write the following lines of code in the file:
-
-#### Dockerfile for React client
+### Project Structure
 ```
-FROM node:16-buster
-
-# What is Dockerfile?
-# Dockerfile describes how to build Docker images, 
-# while docker-compose is used to run Docker containers.
-
-# Create an application directory
-RUN mkdir -p /usr/src/app
-
-# CD into directory
-WORKDIR /usr/src/app
-
-# Copy the app package and package-lock.json file
-# COPY package.json /app/package.json
-# COPY package-lock.json /app/package-lock.json
-COPY package*.json /usr/src/app/
-
-# Install app dependencies
-RUN npm install
-
-# RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
-
-# Bundle app source
-COPY . /usr/src/app/
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
-```
-
-#### Dockerfile for Backend
-```
-FROM node:16-buster
-
-# What is Dockerfile?
-# Dockerfile describes how to build Docker images, 
-# while docker-compose is used to run Docker containers.
-
-# Create an application directory
-RUN mkdir -p /usr/src/app
-
-# CD into directory
-WORKDIR /usr/src/app
-
-# Copy the app package and package-lock.json file
-# COPY package.json /app/package.json
-# COPY package-lock.json /app/package-lock.json
-COPY package*.json /usr/src/app/
-
-# Install app dependencies
-RUN npm install
-
-# RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
-
-# Bundle app source
-COPY . /usr/src/app/
-
-EXPOSE 3000
-
-CMD [ "npm", "start" ]
+project-management-k8s-argocd/
+├── client/                      # React frontend application
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── public/
+│   │   ├── index.html
+│   │   └── manifest.json
+│   └── src/
+│       ├── components/
+│       │   ├── AddClientModal.jsx
+│       │   ├── AddProjectModal.jsx
+│       │   ├── ClientInfo.jsx
+│       │   ├── ClientRow.jsx
+│       │   ├── Clients.jsx
+│       │   ├── DeleteProjectButton.jsx
+│       │   ├── EditProjectForm.jsx
+│       │   ├── Header.jsx
+│       │   ├── ProjectCard.jsx
+│       │   └── Projects.jsx
+│       ├── mutations/
+│       ├── queries/
+│       └── App.js
+├── server/                      # Node.js backend application
+│   ├── Dockerfile
+│   ├── config/
+│   │   └── db.js               # Database configuration
+│   ├── models/
+│   │   ├── Client.js           # Client MongoDB model
+│   │   └── Project.js          # Project MongoDB model
+│   ├── schema/
+│   │   └── schema.js           # GraphQL schema
+│   ├── .env                    # Environment variables
+│   ├── index.js                # Server entry point
+│   └── package.json
+├── k8s/                        # Kubernetes manifests
+│   ├── backend.yaml            # Backend deployment and service
+│   ├── frontend.yaml           # Frontend deployment and service
+│   ├── mongodb.yaml            # MongoDB deployment
+│   ├── mongodb-pv-pvc.yaml     # MongoDB persistence
+│   ├── configmap.yaml          # ConfigMap for environment variables
+│   ├── secret.yaml             # Secrets configuration
+│   ├── init-container-script.yaml
+│   ├── rbac.yaml               # RBAC configurations
+│   └── deploy.sh               # Deployment script
+├── .github/
+│   └── workflows/
+│       └── docker-build.yml    # CI/CD pipeline configuration
+├── docker-compose.yml          # Local development orchestration
+├── package.json               # Root package.json
+├── .gitignore
+└── LICENSE
 ```
 
-### Docker Compose
-> Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
+## 🚀 CI/CD Workflow
 
-To run our entire application together, i.e run all containers parallelly, we need to configure the docker-compose file.
+### GitHub Actions Workflow
 
-In the main directory of the project, (outside the server/client) create a file named docker-compose.yml .
+The project uses GitHub Actions for continuous integration and delivery. The workflow is triggered on every push to the `main` branch and consists of two main jobs:
 
-Write these contents into the file.
+#### 1. Server Build Job (`build-server`)
+```yaml
+# Environment variables
+DOCKER_IMAGE_SERVER: simonjan2/project-management
 
-```
-version: "3"
-
-services:
-
-  backend:
-    # build: server
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    image: project-management:server
-    container_name: server
-    restart: always
-    ports:
-      - 5000:5000
-    volumes:
-      - ./server:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - mongo
-    env_file: ./server/.env
-    networks:
-      - express-mongo
-      - react-express
-
-  mongo:
-    container_name: mongo
-    restart: always
-    image: mongo:4.2.0
-    volumes:
-      - ./data:/data/db
-    networks:
-      - express-mongo
-    expose:
-      - 27017
-
-  frontend:
-    # build: client
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    image: project-management:client
-    container_name: client
-    restart: always
-    ports:
-      - 3000:3000
-    stdin_open: true
-    volumes:
-      - ./client:/usr/app
-      - /usr/app/node_modules
-    networks:
-      - react-express
-    depends_on:
-      - backend
-
-networks:
-  react-express:
-  express-mongo:
-volumes:
-  mongo-data:
-    driver: local
+steps:
+1. Checkout code
+2. Configure Git credentials
+3. Set up Docker Buildx
+4. Login to Docker Hub
+5. Build and push server image
+   - Context: ./server
+   - Tags: simonjan2/project-management:server
+   - Uses build cache
+6. Update Kubernetes manifests
+   - Updates timestamp in k8s/backend.yaml
+   - Commits and pushes changes
 ```
 
-### Creating the Build
-To create the build for the entire application, we need to run the following command: 
+#### 2. Client Build Job (`build-client`)
+```yaml
+# Environment variables
+DOCKER_IMAGE_CLIENT: simonjan2/project-management
+
+steps:
+1. Checkout code
+2. Configure Git credentials
+3. Set up Docker Buildx
+4. Login to Docker Hub
+5. Build and push client image
+   - Context: ./client
+   - Tags: simonjan2/project-management:client
+   - Uses build cache
+6. Update Kubernetes manifests
+   - Updates timestamp in k8s/frontend.yaml
+   - Commits and pushes changes
 ```
-docker-compose build
+
+### CI/CD Pipeline Flow
+
+1. **Trigger**: Push to main branch
+2. **Authentication**:
+   - Uses Docker Hub credentials stored in GitHub secrets
+   - Requires `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`
+
+3. **Build Process**:
+   - Builds server image first
+   - After successful server build, builds client image
+   - Uses Docker Buildx for efficient multi-platform builds
+   - Implements caching for faster builds
+
+4. **Deployment Updates**:
+   - Automatically updates Kubernetes manifests
+   - Updates deployment timestamps to trigger rolling updates
+   - Commits changes back to the repository
+
+### ArgoCD Configuration and GitOps
+
+ArgoCD is configured to automatically sync and deploy changes from the Git repository. Here's the ArgoCD application manifest:
+
+```yaml
+project: default
+source:
+  repoURL: https://github.com/SimonJan2/project-management-k8s-argocd.git
+  path: k8s
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: default
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - PruneLast=true
 ```
 
-### Starting the Services
+#### ArgoCD Features
+- **Automated Sync**: Automatically detects and applies changes from the Git repository
+- **Self-Healing**: Automatically corrects any drift between Git and cluster state
+- **Pruning**: Removes resources that are no longer defined in Git
+- **Namespace Management**: Creates namespace if it doesn't exist
+- **Safe Deployments**: Uses PruneLast to ensure safe resource deletion
 
-### Stopping the containers
-
-
-### Creating the Build
-
-
+#### GitOps Workflow
+1. Developers push code to the main branch
+2. GitHub Actions:
+   - Builds new Docker images
+   - Updates Kubernetes manifests
+   - Commits changes back to repository
+3. ArgoCD:
+   - Detects manifest changes
+   - Validates configurations
+   - Applies changes to the cluster
+   - Ensures desired state matches Git state
 
 ## Automatically build & push the Full Stack Application onto Docker Hub using GitHub Actions
 
@@ -225,125 +216,129 @@ Now moving on to the process of developing a workflow to deploy our full-stack a
 Our workflow YAML file is split into 2 halves one for Server Deployment & Client Deployment.
 
 ```
-name: Docker CI
-
-# Controls when the workflow will run
+name: Docker Build and Push
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    branches:
+      - main
+env:
+  DOCKER_IMAGE_SERVER: simonjan2/project-management
+  DOCKER_IMAGE_CLIENT: simonjan2/project-management
 jobs:
-  # This workflow contains a single job called "Client-Deployment"
-  Client-Deployment:
-    # The type of runner that the job will run on
+  build-server:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      # Configure Git first
+      - name: Configure Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+          git config --global pull.rebase true
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+     
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+     
+      - name: Build and push server image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server
+          file: ./server/Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_IMAGE_SERVER }}:server
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE_SERVER }}:server
+          cache-to: type=inline
 
-  # This workflow contains a single job called "Server-Deployment"
-  Server-Deployment:
-    # The type of runner that the job will run on
+      - name: Update kubernetes manifests
+        run: |
+          git pull origin main
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          sed -i "s|kubectl.kubernetes.io/restartedAt: '.*'|kubectl.kubernetes.io/restartedAt: '$timestamp'|" k8s/backend.yaml
+          git add k8s/backend.yaml
+          git commit -m "Update backend deployment timestamp for new image" || echo "No changes to commit"
+          git push origin main
+
+  build-client:
+    needs: [build-server]
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Configure Git first
+      - name: Configure Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+          git config --global pull.rebase true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+     
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+     
+      - name: Build and push client image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./client
+          file: ./client/Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_IMAGE_CLIENT }}:client
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE_CLIENT }}:client
+          cache-to: type=inline
+
+      - name: Update kubernetes manifests
+        run: |
+          git pull origin main
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          sed -i "s|kubectl.kubernetes.io/restartedAt: '.*'|kubectl.kubernetes.io/restartedAt: '$timestamp'|" k8s/frontend.yaml
+          git add k8s/frontend.yaml
+          git commit -m "Update frontend deployment timestamp for new image" || echo "No changes to commit"
+          git push origin main
 ```
 
-## Stacks Used
-- [Apollo GraphQL Client](https://www.apollographql.com/)
-- [Bootstrap](https://getbootstrap.com/)
-- [GraphQL](https://graphql.org/)
-- [GraphiQL Client](https://github.com/graphql/graphiql/tree/main/packages/graphiql)
-- [MongoDB](https://www.mongodb.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [Express GraphQL](https://graphql.org/graphql-js/express-graphql/)
-- [Express](https://expressjs.com/)
-- [ReactJS](https://reactjs.org/)
-- [NodeJS](https://nodejs.org/en/)
-- [Docker](https://www.docker.com/)
-- [Github Actions](https://github.com/features/actions)
+### Security Considerations
+- Sensitive credentials stored in GitHub secrets
+- Uses GitHub's secure token handling
+- Implements least privilege principle in workflows
+- Automated security scanning in Docker builds
+- ArgoCD RBAC for deployment permissions
 
+## 🔐 Security
 
-## Folder Structure
+- Secrets management through Kubernetes Secrets
+- Uses GitHub's secure token handling
+- Environment variables for sensitive data
+- Secure MongoDB configuration
 
-```
-├── README.md
-├── client
-│   ├── Dockerfile
-│   ├── README.md
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── public
-│   │   ├── ...
-│   └── src
-│       ├── App.js
-│       ├── App.test.js
-│       ├── components
-│       │   ├── AddClientModal.jsx
-│       │   ├── AddProjectModal.jsx
-│       │   ├── ClientInfo.jsx
-│       │   ├── ClientRow.jsx
-│       │   ├── Clients.jsx
-│       │   ├── DeleteProjectButton.jsx
-│       │   ├── EditProjectForm.jsx
-│       │   ├── Header.jsx
-│       │   ├── ProjectCard.jsx
-│       │   ├── Projects.jsx
-│       │   ├── Spinner.jsx
-│       │   └── assets
-│       │       └── logo.png
-│       ├── images
-│       │   ├── ...
-│       ├── index.css
-│       ├── index.js
-│       ├── mutations
-│       │   ├── clientMutations.js
-│       │   └── projectMutations.js
-│       ├── pages
-│       │   ├── Home.jsx
-│       │   ├── NotFound.jsx
-│       │   └── Project.jsx
-│       ├── queries
-│       │   ├── clientQueries.js
-│       │   └── projectQueries.js
-│       ├── reportWebVitals.js
-│       └── setupTests.js
-├── docker-compose.yml
-└── server
-    ├── Dockerfile
-    ├── config
-    │   └── db.js
-    ├── index.js
-    ├── models
-    │   ├── Client.js
-    │   └── Project.js
-    ├── package-lock.json
-    ├── package.json
-    ├── sampleData.js
-    └── schema
-        └── schema.js
-```
+## 📦 Container Images
 
-## Heroku Deployment
-> Heroku integrates with GitHub to make it easy to deploy code living on GitHub to apps running on Heroku. When GitHub integration is configured for a Heroku app, Heroku can automatically build and release (if the build is successful) pushes to the specified GitHub repo.
+- Frontend: Node.js 16-buster based image
+- Backend: Node.js 16-buster based image
+- Database: Official MongoDB image
 
-### Enabling GitHub Integration
-You can configure GitHub integration in the Deploy tab of apps in the Heroku Dashboard.
+## 🔧 Configuration
 
-### Manual Deploys
-With manual deploys, you can create an immediate deployment of any branch from the GitHub repo that’s connected to your app. Use manual deploys if you want to control when changes are deployed to Heroku.
-
-### Automatic Deploys
-When you enable automatic deploys for a GitHub branch, Heroku builds and deploys all pushes to that branch. If, for example, you have a development app on Heroku, you can configure pushes to your GitHub development branch to be automatically built and deployed to that app.
-
-That's it, you are done now!
-
-- https://mern-project-mgmt.herokuapp.com/
-
-
-### Detail Documentation (WIP)
-- https://mdarif.github.io/project-management
+The application can be configured through:
+- Environment variables
+- Kubernetes ConfigMaps
+- Kubernetes Secrets
+- docker-compose.yml for development
