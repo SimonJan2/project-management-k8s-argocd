@@ -5,3 +5,7 @@ node_modules/
 
 # ignore data
 data/
+
+# .vscode
+.vscode/
+
