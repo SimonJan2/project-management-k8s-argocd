@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "kubernetes://schema/v1%40service": "file:///home/simonj/docker/project-management-k8s-argocd/k8s/backend.yaml"
+    }
+}
